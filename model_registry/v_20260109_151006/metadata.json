@@ -1,0 +1,60 @@
+{
+    "model_id": "v_20260109_151006",
+    "model_type": "Ridge",
+    "registration_date": "2026-01-09 15:10:06.139661",
+    "performance_metrics": {
+        "Model_Name": "baseline",
+        "MSE": 4.082814753693998,
+        "RMSE": 2.0205976229061533,
+        "MAE": 1.6111401895129591
+    },
+    "best_hyperparameters": {
+        "mode": "custom",
+        "cleaning": null,
+        "encoding": null,
+        "scaling": null,
+        "model": "Auto",
+        "job_id": 1,
+        "column_config": {
+            "Hours Studied": {
+                "handling": "keep",
+                "impute": "none",
+                "transform": "minmax"
+            },
+            "Previous Scores": {
+                "handling": "keep",
+                "impute": "none",
+                "transform": "none"
+            },
+            "Extracurricular Activities": {
+                "handling": "keep",
+                "impute": "none",
+                "transform": "onehot"
+            },
+            "Sleep Hours": {
+                "handling": "keep",
+                "impute": "none",
+                "transform": "none"
+            },
+            "Sample Question Papers Practiced": {
+                "handling": "keep",
+                "impute": "none",
+                "transform": "none"
+            },
+            "Performance Index": {
+                "handling": "keep",
+                "impute": "none",
+                "transform": "none"
+            }
+        },
+        "problem_type": "Auto",
+        "fast_train": true
+    },
+    "feature_schema": {
+        "columns": "numpy_array",
+        "problem_type": "Regression",
+        "target_col": "Performance Index",
+        "datetime_col": null
+    },
+    "status": "Production_Ready"
+}

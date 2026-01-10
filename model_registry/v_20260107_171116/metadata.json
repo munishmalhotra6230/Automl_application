@@ -1,0 +1,78 @@
+{
+    "model_id": "v_20260107_171116",
+    "model_type": "XGBRegressor",
+    "registration_date": "2026-01-07 17:11:16.942697",
+    "performance_metrics": {
+        "Model_Name": "boosting",
+        "MSE": 90.17606353759766,
+        "RMSE": 9.496107809918634,
+        "MAE": 7.447152137756348
+    },
+    "best_hyperparameters": {
+        "mode": "custom",
+        "cleaning": null,
+        "encoding": null,
+        "scaling": null,
+        "model": "Auto",
+        "job_id": 34,
+        "column_config": {
+            "date": {
+                "handling": "keep",
+                "impute": "none",
+                "transform": "datetime"
+            },
+            "store": {
+                "handling": "drop",
+                "impute": "none",
+                "transform": "none"
+            },
+            "item": {
+                "handling": "drop",
+                "impute": "none",
+                "transform": "none"
+            },
+            "sales": {
+                "handling": "target",
+                "impute": "none",
+                "transform": "none"
+            }
+        },
+        "problem_type": "Time_series",
+        "fast_train": true
+    },
+    "feature_schema": {
+        "columns": [
+            "store",
+            "item",
+            "year",
+            "month",
+            "day",
+            "day_of_week",
+            "quarter",
+            "hour",
+            "is_weekend",
+            "is_month_start",
+            "is_month_end",
+            "sin_month",
+            "cos_month",
+            "sin_day",
+            "cos_day",
+            "is_holiday",
+            "lag_1",
+            "lag_2",
+            "lag_3",
+            "lag_7",
+            "lag_14",
+            "rolling_mean_7",
+            "rolling_std_7",
+            "rolling_mean_14",
+            "rolling_std_14",
+            "target_diff",
+            "target_pct_change"
+        ],
+        "problem_type": "Time_series",
+        "target_col": "sales",
+        "datetime_col": "date"
+    },
+    "status": "Production_Ready"
+}

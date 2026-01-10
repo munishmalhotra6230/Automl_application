@@ -1,0 +1,49 @@
+{
+    "model_id": "v_20260109_152116",
+    "model_type": "XGBClassifier",
+    "registration_date": "2026-01-09 15:21:16.961210",
+    "performance_metrics": {
+        "Model_Name": "Boosting",
+        "Accuracy": 0.001,
+        "Precision": 0.0001827956989247312
+    },
+    "best_hyperparameters": {
+        "mode": "custom",
+        "cleaning": null,
+        "encoding": null,
+        "scaling": null,
+        "model": "Auto",
+        "job_id": 5,
+        "column_config": {
+            "date": {
+                "handling": "keep",
+                "impute": "none",
+                "transform": "datetime"
+            },
+            "store": {
+                "handling": "drop",
+                "impute": "none",
+                "transform": "none"
+            },
+            "item": {
+                "handling": "drop",
+                "impute": "none",
+                "transform": "none"
+            },
+            "sales": {
+                "handling": "keep",
+                "impute": "none",
+                "transform": "none"
+            }
+        },
+        "problem_type": "Classification",
+        "fast_train": true
+    },
+    "feature_schema": {
+        "columns": "numpy_array",
+        "problem_type": "Classification",
+        "target_col": "date",
+        "datetime_col": null
+    },
+    "status": "Production_Ready"
+}

@@ -1,0 +1,76 @@
+{
+    "model_id": "v_20260107_161954",
+    "model_type": "Ridge",
+    "registration_date": "2026-01-07 16:19:54.267120",
+    "performance_metrics": {
+        "Model_Name": "baseline",
+        "MSE": 363.25325325325326,
+        "RMSE": 19.059203898727073,
+        "MAE": 13.757757757757759
+    },
+    "best_hyperparameters": {
+        "mode": "custom",
+        "cleaning": null,
+        "encoding": null,
+        "scaling": null,
+        "model": "Linear",
+        "job_id": 24,
+        "column_config": {
+            "date": {
+                "handling": "keep",
+                "impute": "none",
+                "transform": "none"
+            },
+            "store": {
+                "handling": "drop",
+                "impute": "none",
+                "transform": "none"
+            },
+            "item": {
+                "handling": "drop",
+                "impute": "none",
+                "transform": "none"
+            },
+            "sales": {
+                "handling": "keep",
+                "impute": "none",
+                "transform": "none"
+            }
+        },
+        "problem_type": "Time_series",
+        "fast_train": true
+    },
+    "feature_schema": {
+        "columns": [
+            "store",
+            "item",
+            "year",
+            "month",
+            "day",
+            "day_of_week",
+            "quarter",
+            "hour",
+            "is_weekend",
+            "is_month_start",
+            "is_month_end",
+            "sin_month",
+            "cos_month",
+            "sin_day",
+            "cos_day",
+            "is_holiday",
+            "lag_1",
+            "lag_2",
+            "lag_3",
+            "lag_7",
+            "lag_14",
+            "rolling_mean_7",
+            "rolling_std_7",
+            "rolling_mean_14",
+            "rolling_std_14",
+            "target_diff"
+        ],
+        "problem_type": "Time_series",
+        "mode": "custom"
+    },
+    "status": "Production_Ready"
+}

@@ -1,0 +1,79 @@
+{
+    "model_id": "v_20260108_100705",
+    "model_type": "XGBClassifier",
+    "registration_date": "2026-01-08 10:07:05.584599",
+    "performance_metrics": {
+        "Model_Name": "Boosting",
+        "Accuracy": 0.9,
+        "Precision": 0.8099999999999999
+    },
+    "best_hyperparameters": {
+        "mode": "custom",
+        "cleaning": null,
+        "encoding": null,
+        "scaling": null,
+        "model": "Auto",
+        "job_id": 57,
+        "column_config": {
+            "Season": {
+                "handling": "keep",
+                "impute": "none",
+                "transform": "onehot"
+            },
+            "Age": {
+                "handling": "keep",
+                "impute": "none",
+                "transform": "standard"
+            },
+            "Childish diseases": {
+                "handling": "keep",
+                "impute": "none",
+                "transform": "onehot"
+            },
+            "Accident or serious trauma": {
+                "handling": "drop",
+                "impute": "none",
+                "transform": "none"
+            },
+            "Surgical intervention": {
+                "handling": "keep",
+                "impute": "none",
+                "transform": "onehot"
+            },
+            "High fevers in the last year": {
+                "handling": "drop",
+                "impute": "none",
+                "transform": "none"
+            },
+            "Frequency of alcohol consumption": {
+                "handling": "drop",
+                "impute": "none",
+                "transform": "none"
+            },
+            "Smoking habit": {
+                "handling": "drop",
+                "impute": "none",
+                "transform": "none"
+            },
+            "Number of hours spent sitting per day": {
+                "handling": "keep",
+                "impute": "none",
+                "transform": "standard"
+            },
+            "Diagnosis": {
+                "handling": "keep",
+                "impute": "none",
+                "transform": "ordinal"
+            }
+        },
+        "problem_type": "Classification",
+        "fast_train": true
+    },
+    "feature_schema": {
+        "columns": "numpy_array",
+        "problem_type": "Classification",
+        "target_col": "Diagnosis",
+        "datetime_col": null
+    },
+    "status": "Production_Ready"
+}

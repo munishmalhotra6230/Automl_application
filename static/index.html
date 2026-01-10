@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutoML Pro 2026</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="static/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+    <!-- AUTH OVERLAY -->
+    <div id="auth-overlay">
+        <div class="auth-card" id="login-card">
+            <h2>Welcome Back</h2>
+            <p>Login to your AutoML Dashboard</p>
+            <div class="input-group">
+                <input type="text" id="login-user" placeholder="Username">
+            </div>
+            <div class="input-group">
+                <input type="password" id="login-pass" placeholder="Password">
+            </div>
+            <button class="btn-primary" onclick="handleLogin()">Sign In</button>
+            <p style="margin-top: 1rem; font-size: 0.9rem;">
+                New here? <a href="#" onclick="toggleAuth('register')" style="color: var(--primary)">Create Account</a>
+            </p>
+            <button class="btn-secondary" onclick="closeLogin()" style="margin-top:10px; border:none; color:var(--text-muted)">Close</button>
+        </div>
+        
+        <div class="auth-card hidden" id="register-card">
+            <h2>Create Account</h2>
+            <p>Join the Enterprise AI Platform</p>
+            <div class="input-group">
+                <input type="text" id="reg-user" placeholder="Username">
+            </div>
+            <div class="input-group">
+                <input type="password" id="reg-pass" placeholder="Password">
+            </div>
+            <button class="btn-primary" onclick="handleRegister()">Register</button>
+            <p style="margin-top: 1rem; font-size: 0.9rem;">
+                Already have an account? <a href="#" onclick="toggleAuth('login')" style="color: var(--primary)">Login</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- MAIN APP -->
+    <div id="app-container" style="width:100%; height:100%; display: flex;">
+        
+        <aside class="sidebar">
+            <div class="logo-container">
+                <i class="fas fa-cube"></i> AutoML Pro
+            </div>
+            <nav class="nav-menu">
+                <div class="nav-item active" id="nav-dashboard" onclick="switchView('dashboard')"><i class="fas fa-home"></i> Dashboard</div>
+                <div class="nav-item" id="nav-training" onclick="switchView('training')"><i class="fas fa-brain"></i> Training Studio</div>
+                <div class="nav-item" id="nav-records" onclick="switchView('records')"><i class="fas fa-history"></i> User Records</div>
+                <div class="nav-item" id="nav-prediction" onclick="switchView('prediction')"><i class="fas fa-bolt"></i> Predictions</div>
+                <div class="nav-item" id="nav-monitor" onclick="switchView('monitor')"><i class="fas fa-chart-line"></i> Monitoring</div>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <header class="top-bar">
+                <div class="page-title">
+                    <h1 id="page-title-text">Dashboard</h1>
+                </div>
+                <div class="user-info">
+                    <i class="fas fa-user-circle"></i> <span id="display-user">Guest</span>
+                    <button id="auth-btn" onclick="openLogin()" style="background:var(--primary); border:none; color:#000; padding:5px 12px; border-radius:4px; font-weight:600; cursor:pointer; margin-left:10px;">Login</button>
+                </div>
+            </header>
+
+            <!-- DASHBOARD VIEW -->
+            <section id="view-dashboard" class="view active">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-val">Active</div>
+                        <p>System Status</p>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-val" id="model-status">v1.0</div>
+                        <p>Current Model</p>
+                    </div>
+                     <div class="stat-card">
+                        <div class="stat-val">Global</div>
+                         <p>Access Level</p>
+                    </div>
+                </div>
+
+                <div class="panel" style="margin-top: 1.5rem; background: linear-gradient(135deg, rgba(88, 166, 255, 0.1) 0%, rgba(0, 0, 0, 0) 100%); border: 1px solid var(--primary);">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <h2 style="color: var(--primary); margin-bottom: 0.5rem;"><i class="fas fa-bolt"></i> Ready to Train?</h2>
+                            <p style="color: var(--text-muted);">Start your AutoML pipeline now by uploading a dataset.</p>
+                        </div>
+                        <button class="btn-primary" onclick="switchView('training')" style="width: auto; padding: 0.8rem 2rem;">
+                            Go to Training Studio <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="panel" style="margin-top: 1.5rem">
+                    <div class="panel-header">Performance Visualization</div>
+                    <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                        <div class="chart-container" style="flex: 1; min-width: 300px; height: 300px; background: #0d1117; border-radius: 8px; padding: 1rem;">
+                            <canvas id="leaderboard-chart"></canvas>
+                        </div>
+                        <div class="chart-container" id="validation-chart-wrapper" style="flex: 1; min-width: 300px; height: 300px; background: #0d1117; border-radius: 8px; padding: 1rem;">
+                            <canvas id="validation-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="panel" style="margin-top: 1.5rem">
+                    <div class="panel-header">System Live Logs</div>
+                    <div class="console-box" id="main-console"></div>
+                </div>
+            </section>
+
+            <!-- TRAINING VIEW -->
+            <section id="view-training" class="view hidden">
+                <div class="panel">
+                    <div class="panel-header" style="color:var(--primary)"><i class="fas fa-cog"></i> Configuration Studio (Professional Mode)</div>
+
+                    <div class="training-stepper">
+                        <div class="step-panel" id="step-1">
+                            <h3>1. Data & Problem Selection</h3>
+                            <div class="input-group">
+                                <label>Problem Type</label>
+                                <select id="problem-selector" onchange="updateProblemUI()">
+                                    <option value="Auto" selected>Auto-Detect Problem Type</option>
+                                    <option value="Classification">Classification (Labels/Categories)</option>
+                                    <option value="Regression">Regression (Numeric Prediction)</option>
+                                    <option value="Time_series">Time Series (Forecasting)</option>
+                                </select>
+                                <p class="learn-hint"><i class="fas fa-info-circle"></i> <strong>Classification</strong> is for Groups, <strong>Regression</strong> for Numbers, <strong>Time Series</strong> for Trends.</p>
+                            </div>
+
+                            <!-- LOCAL UPLOAD -->
+                            <div id="ingestion-upload" style="margin-top: 2rem;">
+                                <div class="input-group">
+                                    <label>Upload Dataset (CSV/XLSX) <i class="fas fa-file-upload"></i></label>
+                                    <input type="file" id="train-file" accept=".csv, .xlsx">
+                                </div>
+                                <div style="display: flex; gap: 10px;">
+                                    <button class="btn-primary" onclick="analyzeDataset()" style="flex: 1;">
+                                        <span id="analyze-btn-text">Analyze & Load</span>
+                                        <i id="analyze-loader" class="fas fa-spinner fa-spin hidden"></i>
+                                    </button>
+                                    <button class="btn-secondary" onclick="validateDataset()" style="flex: 1; background: #238636; border-color: #2ea043; color: white;">
+                                        <i class="fas fa-check-circle"></i> Run Quality Checks
+                                    </button>
+                                </div>
+                                <div id="validation-result" class="hidden" style="margin-top: 1rem; padding: 1rem; background: rgba(46, 160, 67, 0.1); border: 1px solid #2ea043; border-radius: 6px;">
+                                    <h4 style="color: #2ea043; margin-bottom: 0.5rem;"><i class="fas fa-shield-alt"></i> Data Quality Report</h4>
+                                    <p id="val-score" style="font-weight: bold; margin-bottom: 0.5rem;">Score: --/100</p>
+                                    <ul id="val-recommendations" style="font-size: 0.85rem; padding-left: 1.2rem; color: var(--text-main);"></ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="step-panel hidden" id="step-2">
+                            <h3>2. Target & Granular Preprocessing</h3>
+                            <div class="input-group">
+                                <label>Target Column</label>
+                                <select id="target-col-select"></select>
+                            </div>
+                            
+                            <div class="table-wrapper" style="max-height: 400px; overflow-y: auto;">
+                                <table class="config-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Column <i class="fas fa-question-circle" title="Feature name from your CSV"></i></th>
+                                            <th>Type</th>
+                                            <th>Handling</th>
+                                            <th>Imputation</th>
+                                            <th>Scaling/Encoding <i class="fas fa-magic" title="Scaling helps number ranges; Encoding helps text"></i></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="column-config-body"></tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="step-panel hidden" id="step-3">
+                            <h3>3. Model & Hyperparameters</h3>
+                            <div class="input-group">
+                                <label>Mode</label>
+                                <div style="display:flex; gap:10px;">
+                                    <div class="tab active" id="mode-auto" onclick="setTrainingMode('auto')">Auto</div>
+                                    <div class="tab" id="mode-manual" onclick="setTrainingMode('manual')">Manual</div>
+                                </div>
+                            </div>
+
+                            <div class="input-group" id="model-gallery-wrapper" style="margin-top:10px;">
+                                <label>Model Gallery (click to select multiple)</label>
+                                <div class="model-gallery" id="model-gallery"></div>
+                                <p style="font-size:0.8rem; color:var(--text-muted);">Tip: In Auto mode top-performers will be used automatically.</p>
+                            </div>
+                            <div style="background: rgba(88, 166, 255, 0.05); padding: 15px; border-radius: 8px; border: 1px dashed var(--primary);">
+                                <h4 style="color:var(--primary); margin-bottom:10px; font-size:0.9rem;">Advanced Optimization (Professional)</h4>
+                                
+                                <div class="input-group" style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
+                                    <input type="checkbox" id="fast-train-toggle" checked style="width:18px; height:18px;">
+                                    <label for="fast-train-toggle" style="margin-bottom:0; font-size:0.9rem;">Enable Fast Training (Parallel & Hist-XGB)</label>
+                                </div>
+                                
+                                <div class="input-group" style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
+                                    <input type="checkbox" id="tuning-toggle" style="width:18px; height:18px;">
+                                    <label for="tuning-toggle" style="margin-bottom:0; font-size:0.9rem;">Use Hyperparameter Optimization (Optuna)</label>
+                                </div>
+                                
+                                <div class="input-group" style="display:flex; align-items:center; gap:10px;">
+                                    <input type="checkbox" id="ensemble-toggle" style="width:18px; height:18px;">
+                                    <label for="ensemble-toggle" style="margin-bottom:0; font-size:0.9rem;">Enable Ensemble</label>
+                                    <select id="ensemble-method-select" style="margin-left:auto; width:160px;">
+                                        <option value="stacking">Stacking (meta-learner)</option>
+                                        <option value="voting">Voting (soft)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <button class="btn-primary" onclick="startTraining()" style="margin-top: 2rem; font-size: 1.1rem; padding: 1.2rem; background: linear-gradient(to right, var(--primary), var(--purple)); color: #fff;">
+                                <i class="fas fa-rocket"></i> Launch Factory Pipeline & Start AutoML
+                            </button>
+                            <p id="train-status" style="margin-top:15px; font-size:0.9rem; color:var(--primary); font-weight: 500;">
+                                <i class="fas fa-info-circle"></i> Waiting for configuration...
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- NEW: Training view console -->
+                    <div id="training-console-wrapper" class="hidden" style="margin-top: 2rem;">
+                        <div class="panel-header" style="display:flex; justify-content:space-between; align-items:center;">
+                            <span><i class="fas fa-terminal"></i> Live Factory Console</span>
+                            <span class="pulse-red"><i class="fas fa-circle"></i> PROCESSING</span>
+                        </div>
+                        <div class="console-box" id="training-console" style="height: 300px; background: #010409;"></div>
+                    </div>
+
+                    <!-- NEW: Training Visualizer -->
+                    <div id="training-visualizer" class="panel hidden" style="margin-top: 1.5rem;">
+                        <div class="panel-header"><i class="fas fa-project-diagram"></i> Pipeline Visualizer</div>
+                        <div style="font-size:0.9rem; color:var(--text-muted); margin-bottom:8px;">Data → Features → Models → Ensemble</div>
+                        <div class="training-flow" id="training-flow">
+                            <!-- model boxes rendered here -->
+                        </div>
+                    </div>
+
+                    <!-- Model Detail Modal -->
+                    <div id="model-detail-modal" class="panel hidden" style="position:fixed; right:20px; top:80px; width:360px; z-index:3000; box-shadow:0 12px 40px rgba(0,0,0,0.6);">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                            <div style="font-weight:700">Model Details</div>
+                            <button class="btn-secondary" onclick="closeModelModal()">Close</button>
+                        </div>
+                        <div id="model-detail-content" style="font-size:0.9rem; color:var(--text-main); max-height:420px; overflow:auto;"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- RECORDS VIEW -->
+            <section id="view-records" class="view hidden">
+                <div class="panel">
+                    <div class="panel-header">Your Training History</div>
+                    <p style="color:var(--text-muted); margin-bottom:1rem; font-size:0.9rem;">Track all models trained by your account.</p>
+                    <div class="table-wrapper">
+                        <table class="history-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>File</th>
+                                    <th>Target</th>
+                                    <th>Mode</th>
+                                    <th>Status</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody id="history-body">
+                                <tr><td colspan="6" style="text-align:center">No records found.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- PREDICTION VIEW -->
+            <section id="view-prediction" class="view hidden">
+                    <div class="prediction-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                        <!-- Left Column: Model & History -->
+                        <div class="pred-config-col">
+                            <div class="input-group" style="margin-bottom: 2rem;">
+                                <label>1. Select Primary Intelligence Model <i class="fas fa-microchip" style="color:var(--primary)"></i></label>
+                                <div style="display: flex; gap: 10px;">
+                                    <select id="pred-model-selector" class="config-select" style="flex: 1;">
+                                        <option value="">Loading versions...</option>
+                                    </select>
+                                    <button class="btn-secondary" onclick="downloadSelectedModel()" title="Download Model File (.pkl)" style="width: auto; padding: 0 15px; background: #30363d; border: 1px solid #484f58; color: #fff; border-radius: 6px; cursor: pointer;">
+                                        <i class="fas fa-download"></i>
+                                    </button>
+                                </div>
+                                <p style="font-size: 0.7rem; color: var(--text-muted); margin-top: 5px;">Pick the version with the best score for highest accuracy.</p>
+                            </div>
+
+                            <div id="ts-forecast-panel" class="hidden" style="padding: 1.5rem; background: rgba(88, 166, 255, 0.05); border: 1px dashed var(--primary); border-radius: 8px;">
+                                <h3 style="color: var(--primary); margin-bottom: 0.5rem;"><i class="fas fa-magic"></i> Future Forecasting</h3>
+                                <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1rem;">Generate future data points based on learned temporal patterns.</p>
+                                
+                                <div class="input-group" style="margin-bottom: 1rem;">
+                                    <label>Horizon (Steps)</label>
+                                    <select id="forecast-horizon" class="config-select">
+                                        <option value="7">Next 7 Steps</option>
+                                        <option value="30">Next 30 Steps</option>
+                                        <option value="90">Next Quarter (90 Steps)</option>
+                                    </select>
+                                </div>
+                                
+                                <button class="btn-primary" onclick="runFutureForecast()" style="background: var(--primary); color: #000; font-size: 0.9rem;">
+                                    <i class="fas fa-chart-line"></i> Predict Future
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Right Column: Batch File Inference -->
+                        <div class="pred-batch-col" style="border-left: 1px solid var(--border); padding-left: 2rem;">
+                            <div class="panel-header" style="display: flex; justify-content: space-between; align-items: center; border:none; margin-bottom: 0;">
+                                <span>Batch CSV Analysis</span>
+                                <span id="ts-quarter-badge" class="status-tag status-info hidden">Time Series Support Active</span>
+                            </div>
+                            
+                            <div id="quarter-selector-container" class="hidden" style="margin: 1rem 0; padding: 0.8rem; background: rgba(255, 255, 255, 0.03); border-radius: 6px; border-left: 3px solid var(--primary);">
+                                <label style="font-size: 0.8rem; color: var(--text-main); font-weight: 600;">Quarterly Filter (Q1-Q4)</label>
+                                <select id="pred-quarter-filter" class="config-select" style="margin-top: 0.4rem; height: 35px; padding: 5px;">
+                                    <option value="all">Analyze Entire File</option>
+                                    <option value="1">Q1 (Jan-Mar)</option>
+                                    <option value="2">Q2 (Apr-Jun)</option>
+                                    <option value="3">Q3 (Jul-Sep)</option>
+                                    <option value="4">Q4 (Oct-Dec)</option>
+                                </select>
+                            </div>
+
+                            <div class="input-group">
+                                <label>Upload Test Dataset <i class="fas fa-file-csv" style="color:var(--primary)"></i></label>
+                                <input type="file" id="pred-file-input" onchange="loadPredictionCSV()">
+                            </div>
+                            
+                            <div id="pred-table-wrapper" class="table-wrapper hidden" style="margin-top: 1rem; max-height: 150px;">
+                                <table id="pred-edit-table" class="config-table" style="font-size: 0.8rem;">
+                                    <!-- Populated by JS -->
+                                </table>
+                            </div>
+
+                            <button class="btn-primary" onclick="runPredictCSV()" style="margin-top: 1rem;">
+                                <i class="fas fa-bolt"></i> Run Batch Inference
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Results Section (Full Width Bottom) -->
+                    <div id="pred-result-container" class="hidden" style="margin-top: 3rem; border-top: 2px solid var(--border); padding-top: 1.5rem;">
+                        <div class="panel-header">Intelligence Output & Patterns</div>
+                        
+                        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem;">
+                            <div style="height: 350px; background: rgba(0,0,0,0.3); border-radius: 8px; padding: 15px; border: 1px solid var(--border);">
+                                <canvas id="prediction-res-chart"></canvas>
+                            </div>
+
+                            <div class="table-wrapper" style="max-height: 350px; overflow-y: auto; border: 1px solid var(--border); border-radius: 8px;">
+                                <table id="pred-results-table" class="history-table">
+                                    <!-- Results here -->
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+             <!-- MONITOR VIEW -->
+            <section id="view-monitor" class="view hidden">
+                <div class="panel">
+                    <div class="panel-header">
+                        <span><i class="fas fa-heartbeat"></i> Model Health Dashboard</span>
+                        <button class="btn-secondary" onclick="loadMonitoringDashboard()" style="padding: 5px 10px; font-size: 0.8rem;">
+                            <i class="fas fa-sync"></i> Refresh
+                        </button>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
+                        <div class="stat-card" style="background: rgba(88, 166, 255, 0.05); border: 1px solid var(--border);">
+                            <div class="stat-val" id="monitor-total-preds">0</div>
+                            <p>Total Predictions</p>
+                        </div>
+                        <div class="stat-card" style="background: rgba(88, 166, 255, 0.05); border: 1px solid var(--border);">
+                            <div class="stat-val" id="monitor-avg-latency">0ms</div>
+                            <p>Avg Latency</p>
+                        </div>
+                        <div class="stat-card" style="background: rgba(88, 166, 255, 0.05); border: 1px solid var(--border);">
+                            <div class="stat-val" id="monitor-error-rate">0%</div>
+                            <p>Error Rate</p>
+                        </div>
+                        <div class="stat-card" style="background: rgba(88, 166, 255, 0.05); border: 1px solid var(--border);">
+                            <div class="stat-val" id="monitor-health-status">Unknown</div>
+                            <p>System Health</p>
+                        </div>
+                    </div>
+
+                    <div class="panel-header">Active Models Status</div>
+                    <div class="table-wrapper">
+                        <table class="history-table">
+                            <thead>
+                                <tr>
+                                    <th>Model ID</th>
+                                    <th>Health</th>
+                                    <th>Latency</th>
+                                    <th>Requests</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="monitor-models-body">
+                                <tr><td colspan="5" style="text-align:center">Loading monitoring data...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="panel-header" style="margin-top: 2rem;">Drift Analysis</div>
+                    <div class="input-group">
+                        <label>Upload Production Batch for Drift Check (CSV)</label>
+                        <input type="file" id="monitor-file">
+                    </div>
+                    <button class="btn-primary" onclick="runMonitor()">Check for Data Drift</button>
+                    <div id="monitor-res" style="margin-top:1rem;"></div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="static/script.js"></script>
+</body>
+</html>
