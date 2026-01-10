@@ -1,0 +1,30 @@
+# Large files
+*.pkl
+*.pickle
+creditcard.csv
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+*.egg-info/
+dist/
+build/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
+server_log.txt
+
+# Data directories
+data_temp/
+kaggle_data/
